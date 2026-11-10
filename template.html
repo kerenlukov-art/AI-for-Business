@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>פורטל המדריכים</title>
+<!-- ============ עיצוב (CSS) ============ -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&display=swap');
+:root{
+  --bg:#fcfcff; --bg-grad:radial-gradient(1100px 420px at 50% -120px,#efe9ff 0,rgba(239,233,255,0) 70%); --surface:#ffffff; --surface2:#f4f5fb; --text:#12142b; --muted:#6a708d;
+  --brand:#6c3fe0; --brand2:#22b8f0; --brand-soft:#efeaff; --line:#e6e8f2;
+  --grad:linear-gradient(90deg,#7a3fe0,#22b8f0);
+  --ok:#157a4b; --ok-soft:#e1f5ea; --warn:#9a5b00; --warn-soft:#fff2d9; --bad:#b3261e; --bad-soft:#fde8e6;
+  --info-soft:#e3f1fb; --radius:14px; --shadow:0 2px 10px rgba(30,30,80,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg-grad:none; --bg:#14162a; --surface:#1d2040; --surface2:#262a50; --text:#eceef8; --muted:#a6acc9;
+    --brand:#9b86ff; --brand2:#5cb6f2; --brand-soft:#2f2a63; --line:#33386a;
+    --ok:#5fd59b; --ok-soft:#173a2b; --warn:#f0bd62; --warn-soft:#3a2f14; --bad:#ff8c84; --bad-soft:#3d1b1a; --info-soft:#16324a;
+    --shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);background-image:var(--bg-grad);background-repeat:no-repeat;color:var(--text);font-family:"Segoe UI","Heebo",Arial,sans-serif;line-height:1.7;font-size:16px}
+a{color:var(--brand)}
+h1,h2,h3,h4{line-height:1.3;margin:1.2em 0 .5em}
+h1{font-size:1.8rem;margin-top:.2em} h2{font-size:1.35rem} h3{font-size:1.1rem} h4{font-size:1rem}
+p{margin:.5em 0} ul,ol{padding-inline-start:1.4em;margin:.4em 0}
+li{margin:.25em 0}
+button,select,input,textarea{font:inherit;color:inherit}
+.app-header{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:var(--shadow)}
+.app-header .brand{font-weight:700;color:var(--brand);text-decoration:none;white-space:nowrap}
+.app-header .spacer{flex:1}
+.app-header select{max-width:46vw;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+.icon-btn{border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:7px 12px;cursor:pointer}
+.icon-btn:hover,.btn:hover{filter:brightness(.96)}
+.layout{display:flex;align-items:flex-start;max-width:1280px;margin:0 auto}
+.sidebar{width:270px;flex:none;position:sticky;top:57px;max-height:calc(100vh - 57px);overflow:auto;padding:16px;border-inline-end:1px solid var(--line)}
+.sidebar h4{margin:.2em 0 .6em;color:var(--muted);font-size:.85rem}
+.sidebar a{display:block;padding:8px 12px;margin:3px 0;border-radius:10px;text-decoration:none;color:var(--text);font-weight:700}
+.sidebar a:hover{background:var(--surface2)}
+.sidebar a.active{background:var(--brand-soft);color:var(--brand);font-weight:700}
+.sidebar .num{display:inline-block;min-width:1.6em;color:var(--muted);font-weight:700}
+/* מספר המפגש בעמודה נפרדת, כך ששורה שנייה מיושרת עם הטקסט שמעליה */
+.sidebar a:has(.num){display:flex;align-items:baseline;gap:4px}
+.sidebar a .num{flex:none;min-width:1.9em}
+.sidebar a .lbl{flex:1;min-width:0}
+main{flex:1;min-width:0;padding:20px 16px 60px}
+.wrap{max-width:900px;margin:0 auto}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px 22px;margin:16px 0;box-shadow:0 10px 30px rgba(60,50,120,.08)}
+.card h3:first-child,.card h4:first-child{margin-top:0}
+.card>h2:first-child{margin-top:0;font-weight:800;color:var(--text)}
+.card>h2:first-child::after{content:"";display:block;width:48px;height:4px;border-radius:4px;background:var(--grad);margin-top:8px}
+.hero{text-align:center;padding:26px 8px 12px;margin-bottom:6px}
+.hero h1{margin:0 0 10px;color:var(--text);font-weight:800;font-size:2rem}
+.hero h1::after{content:"";display:block;width:64px;height:4px;border-radius:4px;background:var(--grad);margin:12px auto 0}
+.hero p{margin:6px auto;color:var(--muted);max-width:640px}
+.hero .small{color:var(--muted)}
+.hero p.subtitle{font-weight:400;font-size:1.15rem;color:var(--muted);line-height:1.6;max-width:720px}
+.hero p.count{font-weight:400;font-size:1.15rem;color:var(--muted);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.hero .chips{justify-content:center}
+.chip{display:inline-block;padding:3px 11px;border-radius:99px;background:var(--surface2);color:var(--text);font-size:.85rem;border:1px solid var(--line)}
+.learn-title{text-align:center;font-weight:800;font-size:1.7rem;margin:26px 0 0}
+.learn-title::after{content:"";display:block;width:64px;height:4px;border-radius:4px;background:var(--grad);margin:12px auto 0}
+.learn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:22px 0}
+.learn-card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px 18px;text-align:center;box-shadow:0 10px 30px rgba(60,50,120,.08)}
+.learn-card .ico{width:84px;height:84px;margin:0 auto;border-radius:24px;display:grid;place-items:center;background:linear-gradient(135deg,#f1ecff,#e3f6fd);box-shadow:inset 0 0 0 1px rgba(108,63,224,.12)}
+.learn-card svg{width:48px;height:48px}
+.learn-card{transition:transform .15s,box-shadow .15s}.learn-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(60,50,120,.14)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .learn-card .ico{background:var(--brand-soft)}}
+.learn-card h3{margin:14px 0 6px;font-size:1.2rem;font-weight:800}
+.learn-card p{margin:0;color:var(--muted);font-size:.95rem}
+@media (max-width:820px){.learn-grid{grid-template-columns:1fr 1fr;gap:12px}.learn-card{padding:16px 10px}.learn-card h3{font-size:1rem}.hero h1{font-size:1.6rem}}
+@media (max-width:480px){.learn-grid{grid-template-columns:1fr}}
+.badge{display:inline-block;padding:1px 9px;border-radius:99px;font-size:.78rem;font-weight:700}
+.t-open{background:#e3f1fb;color:#14598a}.t-explain{background:#ece8ff;color:#4a32b4}.t-demo{background:#fff2d9;color:#8a5200}.t-practice{background:#e1f5ea;color:#157a4b}.t-summary{background:#fde8e6;color:#a22}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .badge{filter:brightness(.9) saturate(.9)}}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:6px 0;position:sticky;top:57px;background:var(--bg);z-index:20;border-bottom:1px solid var(--line)}
+.tab{white-space:nowrap;padding:9px 16px;border-radius:10px 10px 0 0;text-decoration:none;color:var(--muted);font-weight:600}
+.tab.active{background:var(--surface);color:var(--brand);box-shadow:inset 0 -3px 0 var(--brand)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.btn{border:1px solid transparent;background:var(--grad);color:#fff;border-radius:12px;padding:9px 18px;cursor:pointer;font-weight:700;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--brand);border-color:var(--brand)}
+table{width:100%;border-collapse:collapse;margin:8px 0;font-size:.95rem}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:start;vertical-align:top}
+th{background:var(--surface2)}
+.table-wrap{overflow-x:auto}
+.callout{border-radius:12px;padding:10px 14px;margin:10px 0;border:1px solid var(--line)}
+.callout.deliv{background:var(--ok-soft);border-color:var(--ok)}
+.callout.warn{background:var(--warn-soft)} .callout.info{background:var(--info-soft)} .callout.bad{background:var(--bad-soft)}
+.callout strong:first-child{display:block;margin-bottom:2px}
+.concept{border-inline-start:4px solid var(--brand);padding:8px 14px;margin:12px 0;background:var(--surface2);border-radius:0 10px 10px 0}
+.concept .term{font-weight:700;font-size:1.05rem}
+.concept .ex{margin:4px 0}.concept .def{color:var(--muted)}
+.tag{font-size:.75rem;font-weight:700;color:var(--brand);display:block}
+pre.prompt{white-space:pre-wrap;background:#14162a;color:#e9ebff;padding:12px 14px;border-radius:10px;overflow:auto;direction:rtl;text-align:start;font-family:Consolas,"Courier New",monospace;font-size:.92rem;margin:6px 0}
+.promptbox{position:relative}
+.copy{position:absolute;top:8px;left:8px;font-size:.75rem;padding:3px 10px;border-radius:8px;border:0;background:#fff;color:#14162a;cursor:pointer}
+.seg{border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow:hidden}
+.seg-h{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 14px;background:var(--surface2);font-weight:700;flex-wrap:wrap}
+.seg-b{padding:8px 14px}
+.say{border-inline-start:4px solid var(--brand2);padding:4px 12px;margin:8px 0}
+.do{border-inline-start:4px solid var(--ok);padding:4px 12px;margin:8px 0}
+.say .l,.do .l{font-weight:700;font-size:.85rem;display:block;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:var(--surface)}
+summary{cursor:pointer;font-weight:700}
+details.solution{background:var(--ok-soft);border-color:var(--ok)}
+.ex-meta{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.course-card{display:block;text-decoration:none;color:inherit}
+.course-card:hover{border-color:var(--brand)}
+.sessions a{text-decoration:none}
+form.fb label{display:block;font-weight:600;margin-top:12px}
+form.fb input,form.fb select,form.fb textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-top:4px}
+form.fb textarea{min-height:74px}
+form.fb .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.notice{padding:8px 12px;border-radius:10px;background:var(--ok-soft);color:var(--ok);margin:8px 0;display:none}
+.menu-btn{display:none}
+#print-root{display:none}
+.muted{color:var(--muted)} .small{font-size:.85rem}
+@media (max-width:820px){
+  .menu-btn{display:inline-block}
+  .sidebar{display:none;position:fixed;top:57px;bottom:0;right:0;width:82vw;max-width:320px;background:var(--surface);z-index:40;box-shadow:-4px 0 20px rgba(0,0,0,.2)}
+  body.menu-open .sidebar{display:block}
+  .app-header{flex-wrap:nowrap;gap:6px;padding:8px 10px}
+  .app-header label{display:none}
+  .app-header select{flex:1;min-width:0;max-width:none}
+  .app-header .brand{font-size:.9rem}
+  body{overflow-x:hidden}
+  .layout{display:block}
+  h1{font-size:1.5rem}
+  th,td{padding:6px 7px;font-size:.88rem}
+  .tabs,.sidebar{top:57px}
+}
+
+/* ===== שפת עיצוב בהשראת Product Experts ===== */
+:root{--ink:#0f172a;--slate:#667085;--violet:#7c3aed;--indigo:#4f46e5;--cyan:#22d3ee;--navy:#050816;
+  --grad:linear-gradient(135deg,#7c3aed 0%,#22d3ee 100%);--grad-text:linear-gradient(135deg,#22d3ee 0%,#4f46e5 45%,#7c3aed 100%);
+  --bg:#ffffff;--bg-grad:none;--text:#0f172a;--muted:#667085;--brand:#7c3aed;--brand2:#22d3ee;--brand-soft:#f3edff;--line:rgba(226,232,240,.9);--surface2:#f8fafc}
+body{font-family:"Assistant","Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.65;color:var(--ink)}
+h1,h2,h3,h4{font-family:"Assistant","Segoe UI",Arial,sans-serif;letter-spacing:0}
+.app-header{background:rgba(5,8,22,.96);border-bottom:1px solid rgba(255,255,255,.08);box-shadow:none;backdrop-filter:blur(8px)}
+.app-header .brand{color:#fff;font-weight:800;font-size:1.1rem}
+.app-header label{color:#cbd5e1}
+.app-header select,.icon-btn{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.app-header select option{color:#0f172a}
+.sidebar a{font-weight:700;font-size:.97rem;transition:background .2s,color .2s}
+.sidebar a.active{background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(34,211,238,.12));color:var(--violet);font-weight:800}
+.sidebar h4{font-weight:800;letter-spacing:.02em}
+/* כותרת עליונה כהה */
+.hero{position:relative;overflow:hidden;background:var(--navy);border-radius:20px;padding:46px 26px 40px;margin:4px 0 8px;text-align:center;
+  background-image:radial-gradient(600px 260px at 85% 0%,rgba(124,58,237,.45),transparent 70%),radial-gradient(520px 260px at 10% 100%,rgba(34,211,238,.28),transparent 70%)}
+.hero h1{color:#fff;font-weight:900;font-size:46px;line-height:1.08;margin:0 0 14px}
+.hero h1::after{display:none}
+.hero h1 .grad{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.hero p,.hero p.subtitle,.hero p.count{color:#cbd5e1;font-weight:400;font-size:18px;line-height:1.45}
+.hero p.count{margin-top:2px}
+.hero .small{color:#94a3b8;font-weight:700;font-size:.95rem;margin-bottom:8px}
+.hero .chip{background:rgba(255,255,255,.08);color:#e2e8f0;border-color:rgba(255,255,255,.18);font-weight:700}
+/* כותרות סקציה */
+.learn-title{font-size:36px;font-weight:700;color:#000;margin-top:44px}
+.learn-title::after,.card>h2:first-child::after{width:58px;height:4px;background:var(--grad);border-radius:4px}
+.card>h2:first-child{font-size:1.55rem;font-weight:800;color:var(--ink)}
+.card h3{font-weight:800}
+/* כרטיסים */
+.card,.learn-card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 45px rgba(15,23,42,.08);transition:transform .25s,box-shadow .25s,border-color .25s}
+.card{padding:28px 26px 26px}
+.learn-card{padding:28px 22px 26px}
+.learn-card:hover{transform:translateY(-5px);box-shadow:0 24px 60px rgba(15,23,42,.13);border-color:rgba(124,58,237,.22)}
+.learn-card .ico{width:auto;height:auto;background:none;box-shadow:none;border-radius:0}
+.learn-card svg{width:60px;height:60px}
+.learn-card h3{font-size:21px;font-weight:800;color:#000;margin:16px 0 12px;line-height:1.3}
+.learn-card p{font-size:15px;color:var(--slate);line-height:1.55}
+.learn-grid{gap:22px}
+/* כפתורים */
+.btn{background:var(--grad);font-weight:800;border-radius:12px;padding:11px 22px;transition:transform .2s,box-shadow .2s,filter .2s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.06);box-shadow:0 18px 44px rgba(124,58,237,.3)}
+.btn.ghost{background:#fff;color:var(--violet);border:1.5px solid rgba(124,58,237,.45)}
+.tab{font-weight:700}
+.tab.active{color:var(--violet);box-shadow:inset 0 -3px 0 var(--violet)}
+.concept{border-inline-start-color:var(--violet);background:#f8f7ff}
+.tag{color:var(--violet)}
+th{background:#f8fafc;font-weight:800}
+/* אנימציית כניסה */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}.learn-card:hover,.btn:hover{transform:none}}
+@media (max-width:820px){.hero{padding:34px 16px 28px}.hero h1{font-size:32px}.learn-title{font-size:28px}.hero p,.hero p.subtitle,.hero p.count{font-size:16px}}
+@media print{
+  .reveal{opacity:1 !important;transform:none !important}
+  .hero h1 .grad{-webkit-text-fill-color:#000;color:#000 !important;background:none}
+  body{background:#fff;color:#000;font-size:11.5pt}
+  .app-header,.layout,.toolbar,.notice{display:none !important}
+  #print-root{display:block !important}
+  .card,.seg,.concept{box-shadow:none;break-inside:avoid}
+  .hero{background:#fff !important;color:#000 !important;border:2px solid #5b3fd1}
+  .hero h1,.hero p{color:#000 !important}
+  .hero .chip{color:#000 !important;border-color:#999 !important;background:#fff !important}
+  pre.prompt{background:#f2f2f2 !important;color:#000 !important;border:1px solid #bbb}
+  .copy{display:none}
+  details{break-inside:avoid}
+  a{color:#000;text-decoration:none}
+  h2{break-after:avoid}
+}
+body.export .app-header{display:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="gr" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7a3fe0"/><stop offset="1" stop-color="#22b8f0"/></linearGradient></defs></svg>
+<header class="app-header">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="תפריט">☰ תפריט</button>
+  <a class="brand" href="#/">פורטל המדריכים</a><!-- הקישור מפנה לסילבוס של הקורס הראשון -->
+  <span class="spacer"></span>
+  <label class="small muted" for="courseSel">הקורס שלי:</label>
+  <select id="courseSel" aria-label="בחירת קורס"></select>
+</header>
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="ניווט בקורס"></nav>
+  <main><div class="wrap" id="view"></div></main>
+</div>
+<div id="print-root"></div>
+
+<!-- ============ תוכן (JSON): לעדכון תוכן יש לערוך את קובצי content/ ולהריץ build.py ============ -->
+<script type="application/json" id="course-data">/*__DATA__*/</script>
+
+<!-- ============ לוגיקה ============ -->
+<script>
+(function(){
+"use strict";
+var DATA = JSON.parse(document.getElementById('course-data').textContent);
+var COURSES = DATA.courses;
+var TYPES = {open:'פתיחה',explain:'הסבר',demo:'הדגמה',practice:'תרגול',summary:'סיכום'};
+var STORE_KEY = 'courseFeedback.v1';
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function nl(s){return esc(s).replace(/\n/g,'<br>');}
+function ul(a){return a&&a.length?'<ul>'+a.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>':'';}
+function ol(a){return a&&a.length?'<ol>'+a.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ol>':'';}
+function chip(t){return '<span class="chip">'+esc(t)+'</span>';}
+function getCourse(id){for(var i=0;i<COURSES.length;i++){if(COURSES[i].id===id)return COURSES[i];}return null;}
+function getLesson(c,n){for(var i=0;i<c.lessons.length;i++){if(String(c.lessons[i].n)===String(n))return c.lessons[i];}return null;}
+
+/* ---------- אחסון משוב ---------- */
+function loadFb(){try{return JSON.parse(localStorage.getItem(STORE_KEY)||'[]');}catch(e){return [];}}
+function saveFb(list){try{localStorage.setItem(STORE_KEY,JSON.stringify(list));return true;}catch(e){return false;}}
+function download(name,text,type){
+  var b=new Blob([text],{type:type||'text/plain'});var a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+}
+
+/* ---------- רכיבים ---------- */
+function promptBlock(p){
+  if(!p)return '';
+  return '<div class="promptbox"><button class="copy" type="button" data-copy>העתק</button><pre class="prompt">'+esc(p)+'</pre></div>';
+}
+function timingStats(l){
+  var total=0,prac=0;l.timing.forEach(function(t){total+=t.min;if(t.type==='practice')prac+=t.min;});
+  return {total:total,prac:prac,pct:total?Math.round(prac/total*100):0};
+}
+function heroLesson(c,l){
+  return '<div class="hero"><div class="small">'+esc(c.title)+' | מפגש '+l.n+' מתוך '+c.lessons.length+'</div><h1>'+esc(l.title)+'</h1><p>'+esc(l.topic)+'</p>'
+   +'<div class="chips">'+chip('90 דקות')+chip('תרגול: '+timingStats(l).prac+' דקות ('+timingStats(l).pct+'%)')+chip('גרסה '+c.version)+'</div></div>';
+}
+
+/* ---------- מערך שיעור ---------- */
+function secPlan(c,l){
+  var s=timingStats(l),h='';
+  h+='<div class="card"><h2>מטרות המפגש</h2>'+ul(l.goals)+'<div class="callout deliv"><strong>תוצר המפגש</strong>'+esc(l.deliverable)+'</div></div>';
+  h+='<div class="card"><h2>הכנה לפני המפגש</h2>'+ul(l.prep)+(l.materials&&l.materials.length?'<h4>חומרים</h4>'+ul(l.materials):'')+'</div>';
+  h+='<div class="card"><h2>מבנה השיעור וחלוקת זמנים</h2><div class="table-wrap"><table><thead><tr><th>#</th><th>שלב</th><th>דקות</th><th>מה קורה</th></tr></thead><tbody>';
+  l.timing.forEach(function(t,i){h+='<tr><td>'+(i+1)+'</td><td><span class="badge t-'+t.type+'">'+TYPES[t.type]+'</span><br>'+esc(t.title)+'</td><td>'+t.min+'</td><td>'+esc(t.plan)+'</td></tr>';});
+  h+='<tr><th colspan="2">סה״כ</th><th>'+s.total+'</th><th>תרגול '+s.prac+' דקות, '+s.pct+'% מהמפגש</th></tr></tbody></table></div></div>';
+  h+='<div class="card"><h2>הסבר הנושא</h2><p>'+esc(l.explanation.intro)+'</p>';
+  l.explanation.concepts.forEach(function(k){
+    h+='<div class="concept"><div class="term">'+esc(k.term)+'</div><span class="tag">דוגמה מהעולם העסקי</span><div class="ex">'+esc(k.example)+'</div><span class="tag">ההגדרה</span><div class="def">'+esc(k.definition)+'</div></div>';
+  });
+  h+='</div>';
+  h+='<div class="card"><h2>הדגמה חיה: '+esc(l.demo.title)+'</h2>'+ol(l.demo.steps)+(l.demo.prompt?'<h4>טקסט להדגמה</h4>'+promptBlock(l.demo.prompt):'')+'</div>';
+  if(l.extensions&&l.extensions.length){h+='<div class="card"><h2>הרחבות אופציונליות</h2><p class="muted small">'+esc(c.extensionsNote||'')+'</p>'+ul(l.extensions)+'</div>';}
+  return h;
+}
+
+/* ---------- מדריך מורה ---------- */
+function secGuide(c,l,openAll){
+  var g=l.guide,h='';
+  h+='<div class="card"><h2>מה המדריך אומר ועושה בכל שלב</h2>';
+  var acc=0;
+  l.timing.forEach(function(t){
+    h+='<div class="seg"><div class="seg-h"><span><span class="badge t-'+t.type+'">'+TYPES[t.type]+'</span> '+esc(t.title)+'</span><span class="small muted">דקה '+acc+' עד '+(acc+t.min)+' ('+t.min+' דק׳)</span></div><div class="seg-b">'
+      +'<div class="say"><span class="l">המדריך אומר</span>'+esc(t.says)+'</div><div class="do"><span class="l">המדריך עושה</span>'+esc(t.does)+'</div></div></div>';
+    acc+=t.min;
+  });
+  h+='</div>';
+  h+='<div class="card"><h2>דגשים</h2>'+ul(g.emphasize)+'</div>';
+  h+='<div class="card"><h2>טעויות נפוצות ואיך מתמודדים</h2><div class="table-wrap"><table><thead><tr><th>טעות נפוצה</th><th>איך מתמודדים</th></tr></thead><tbody>'
+    +g.mistakes.map(function(m){return '<tr><td>'+esc(m.m)+'</td><td>'+esc(m.fix)+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  h+='<div class="card"><h2>שאלות צפויות ותשובות מוצעות</h2>'+g.faq.map(function(f){return '<details'+(openAll?' open':'')+'><summary>'+esc(f.q)+'</summary><p>'+esc(f.a)+'</p></details>';}).join('')+'</div>';
+  h+='<div class="card"><h2>טיפים להוראה בזום</h2>'+ul(g.zoom)+'</div>';
+  h+='<div class="card"><div class="callout warn"><strong>תוכנית גיבוי: אם כלי לא עובד או שהשיעור מתעכב</strong>'+ul(g.backup)+'</div></div>';
+  return h;
+}
+
+/* ---------- תרגילים ---------- */
+function secEx(c,l,openAll){
+  var h='<div class="card"><h2>תרגילים</h2><p class="muted">'+l.exercises.filter(function(e){return e.kind==='class';}).length+' תרגילי כיתה ותרגיל אחד לבית. הפתרונות מיועדים למדריך.</p></div>';
+  l.exercises.forEach(function(e,i){
+    h+='<div class="card"><h3>'+(e.kind==='home'?'תרגיל לבית':'תרגיל כיתה')+' '+(e.kind==='home'?'':(i+1))+': '+esc(e.title)+'</h3>'
+     +'<div class="ex-meta">'+chip('זמן: '+e.time)+chip('רמת קושי: '+e.level)+chip(e.kind==='home'?'לבית':'בכיתה')+'</div>'
+     +'<p><strong>מטרה:</strong> '+esc(e.goal)+'</p><p><strong>תרחיש עסקי:</strong> '+esc(e.scenario)+'</p>'
+     +'<h4>הוראות צעד אחר צעד</h4>'+ol(e.steps)+(e.prompt?'<h4>טקסט לשימוש</h4>'+promptBlock(e.prompt):'')
+     +'<details class="solution"'+(openAll?' open':'')+'><summary>פתרון לדוגמה למדריך</summary>'+e.solution.map(function(p){return '<p>'+esc(p)+'</p>';}).join('')+'</details></div>';
+  });
+  return h;
+}
+
+/* ---------- משוב ---------- */
+function rating(name,label){
+  return '<label>'+esc(label)+'<select name="'+name+'"><option value="">בחרו</option>'+[1,2,3,4,5].map(function(n){return '<option>'+n+'</option>';}).join('')+'</select></label>';
+}
+function secFeedback(c,l){
+  var h='<div class="card"><h2>טופס משוב למדריך</h2><p class="muted small">ממלאים בתוך 24 שעות מהמפגש. המשוב נשמר בדפדפן הזה, וניתן לייצא אותו כקובץ ולשלוח לאחראי התוכן.</p>'
+   +'<form class="fb" data-type="instructor" data-lesson="'+l.n+'">'
+   +'<div class="row"><label>שם המדריך<input name="name"></label><label>תאריך המפגש<input type="date" name="date"></label><label>מחזור או קבוצה<input name="group"></label><label>מספר משתתפים<input type="number" min="0" name="count"></label></div>'
+   +'<p class="small muted">גרסת החומר: '+esc(c.version)+'</p>'
+   +'<h3>זמנים בפועל</h3><div class="table-wrap"><table><thead><tr><th>שלב</th><th>מתוכנן</th><th>בפועל (דקות)</th></tr></thead><tbody>'
+   +l.timing.map(function(t,i){return '<tr><td>'+esc(t.title)+'</td><td>'+t.min+'</td><td><input type="number" min="0" name="actual_'+i+'" style="width:90px"></td></tr>';}).join('')+'</tbody></table></div>'
+   +'<div class="row">'+rating('r_structure','מבנה מערך השיעור (1-5)')+rating('r_practice','איכות התרגילים (1-5)')+rating('r_engage','מעורבות הכיתה (1-5)')+rating('r_time','התאמת התוכן לזמן (1-5)')+'</div>'
+   +'<label>מה עבד טוב?<textarea name="worked"></textarea></label><label>מה לא עבד?<textarea name="failed"></textarea></label>'
+   +'<label>איפה המשתתפים נתקעו?<textarea name="stuck"></textarea></label><label>תקלות בכלים (איזה כלי, מה קרה, איך נפתר)<textarea name="tools"></textarea></label>'
+   +'<label>הצעות לשינוי בחומר<textarea name="suggest"></textarea></label>'
+   +'<div class="toolbar"><button class="btn" type="submit">שמירת המשוב</button></div><div class="notice" role="status"></div></form></div>';
+  h+='<div class="card"><h2>טופס משוב למשתתפים</h2><p class="muted small">אפשר להקרין במסך ולבקש ממשתתפים למלא בדקה האחרונה, או לאסוף תשובות בעל פה ולהזין.</p>'
+   +'<form class="fb" data-type="participant" data-lesson="'+l.n+'"><div class="row">'
+   +rating('p_clear','עד כמה המפגש היה ברור? (1-5)')+rating('p_pace','קצב המפגש מתאים? (1-5)')+rating('p_use','עד כמה שימושי לעסק שלי? (1-5)')
+   +'<label>הצלחתי להשלים את התוצר?<select name="p_done"><option value="">בחרו</option><option>כן</option><option>חלקית</option><option>לא</option></select></label></div>'
+   +'<label>הדבר הכי שימושי במפגש<textarea name="p_best"></textarea></label><label>מה היה קשה או לא ברור?<textarea name="p_hard"></textarea></label><label>מה הייתי משפר?<textarea name="p_improve"></textarea></label>'
+   +'<div class="toolbar"><button class="btn" type="submit">שמירה</button></div><div class="notice" role="status"></div></form></div>';
+  h+='<div class="card"><h3>משובים שנשמרו למפגש זה</h3><div id="fbList"></div></div>';
+  return h;
+}
+function renderFbList(c,l){
+  var el=document.getElementById('fbList');if(!el)return;
+  var items=loadFb().filter(function(x){return x.courseId===c.id&&String(x.lesson)===String(l.n);});
+  if(!items.length){el.innerHTML='<p class="muted">עדיין לא נשמרו משובים במחשב הזה.</p>';return;}
+  el.innerHTML='<p>'+items.length+' משובים. <button class="btn ghost" type="button" id="exportLessonFb">ייצוא JSON</button></p><ul>'+items.map(function(x){return '<li>'+(x.type==='instructor'?'מדריך':'משתתף')+', '+esc(new Date(x.ts).toLocaleString('he-IL'))+', גרסה '+esc(x.version)+'</li>';}).join('')+'</ul>';
+  document.getElementById('exportLessonFb').onclick=function(){download('feedback-'+c.id+'-lesson'+l.n+'.json',JSON.stringify(items,null,2),'application/json');};
+}
+
+/* ---------- סילבוס ---------- */
+var ICON_ATTR='viewBox="0 0 64 64" fill="none" stroke="url(#gr)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+var ICONS={
+  ai:'<circle cx="27" cy="27" r="17"/><path d="M40 40l14 14"/><path d="M27 17l2.6 6.4L36 26l-6.4 2.6L27 35l-2.6-6.4L18 26l6.4-2.6z"/>',
+  agent:'<rect x="12" y="20" width="40" height="30" rx="11"/><path d="M32 20v-7"/><circle cx="32" cy="10" r="3"/><circle cx="24" cy="34" r="3.5"/><circle cx="40" cy="34" r="3.5"/><path d="M26 42c3.5 2.5 8.5 2.5 12 0M12 32H7v8h5M52 32h5v8h-5"/>',
+  flow:'<path d="M35 6L16 35h14l-3 23 21-31H34z"/>',
+  systems:'<circle cx="32" cy="32" r="8"/><rect x="6" y="6" width="14" height="14" rx="4"/><rect x="44" y="6" width="14" height="14" rx="4"/><rect x="6" y="44" width="14" height="14" rx="4"/><rect x="44" y="44" width="14" height="14" rx="4"/><path d="M19 19l7 7M45 19l-7 7M19 45l7-7M45 45l-7-7"/>',
+  knowledge:'<path d="M6 16c10-4 19-3 26 3 7-6 16-7 26-3v34c-10-4-19-3-26 3-7-6-16-7-26-3z"/><path d="M32 19v34M13 26c5-1.5 9-1 13 1M13 34c5-1.5 9-1 13 1M38 27c4-2 8-2.5 13-1"/>',
+  dash:'<rect x="6" y="8" width="52" height="48" rx="6"/><path d="M16 46V36M26 46V30M36 46V34M46 46V24"/><path d="M14 26l10-8 10 6 14-10"/><circle cx="48" cy="14" r="2.5"/>',
+  flag:'<circle cx="30" cy="34" r="22"/><circle cx="30" cy="34" r="13"/><circle cx="30" cy="34" r="4"/><path d="M30 34L54 10M46 10h8v8"/>'
+};
+function titleHtml(s){var i=s.indexOf(':');return i<0?esc(s):esc(s.slice(0,i+1))+'<br><span class="grad">'+esc(s.slice(i+1).trim())+'</span>';}
+function viewSyllabus(c){
+  var h='<div class="hero"><h1>'+titleHtml(c.title)+'</h1><p class="subtitle">'+esc(c.subtitle)+'</p><p class="count">'+c.lessons.length+' מפגשים</p></div>';
+  if(c.highlights){
+    h+='<h2 class="learn-title">'+esc(c.highlightsTitle||'מה תלמדו?')+'</h2><div class="learn-grid">'
+     +c.highlights.map(function(x){return '<div class="learn-card"><div class="ico"><svg '+ICON_ATTR+'>'+(ICONS[x.icon]||'')+'</svg></div><h3>'+esc(x.title)+'</h3><p>'+esc(x.text)+'</p></div>';}).join('')+'</div>';
+  }
+  h+='<div class="toolbar"><button class="btn" data-act="print-syllabus">הדפסת הסילבוס</button></div>';
+  h+=syllabusBody(c);
+  return h;
+}
+function syllabusBody(c){
+  var h='<div class="card"><h2>מטרות הקורס</h2>'+ul(c.goals)+'</div>';
+  h+='<div class="card"><h2>תוצרי למידה מדידים</h2><p>בסוף הקורס המשתתף יודע:</p>'+ol(c.outcomes)+'</div>';
+  h+='<div class="card sessions"><h2>פירוט המפגשים</h2><div class="table-wrap"><table><thead><tr><th>#</th><th>נושא</th><th>מטרות</th><th>תוצר מעשי</th></tr></thead><tbody>'
+   +c.lessons.map(function(l){return '<tr><td>'+l.n+'</td><td><a href="#/c/'+esc(c.id)+'/l/'+l.n+'/plan"><strong>'+esc(l.title)+'</strong></a><br><span class="muted small">'+esc(l.topic)+'</span></td><td>'+ul(l.goals)+'</td><td>'+esc(l.deliverable)+'</td></tr>';}).join('')
+   +'</tbody></table></div></div>';
+  h+='<div class="card"><h2>דרישות מקדימות</h2>'+ul(c.prerequisites)+'<h3>כלים וחשבונות להכין מראש</h3>'+ul(c.prepBeforeStart)+'</div>';
+  h+='<div class="card"><h2>הכלים בקורס</h2><div class="table-wrap"><table><thead><tr><th>תחום</th><th>כלים</th><th>הערה</th></tr></thead><tbody>'
+   +c.tools.map(function(t){return '<tr><td>'+esc(t.area)+'</td><td>'+esc(t.tools)+'</td><td>'+esc(t.note)+'</td></tr>';}).join('')+'</tbody></table></div><p class="muted small">'+esc(c.toolsDisclaimer||'')+'</p></div>';
+  h+='<div class="card"><h2>עקרונות פדגוגיים</h2>'+ul(c.pedagogy)+'</div>';
+  h+='<div class="card"><h2>שגרת עבודה בזום</h2>'+ul(c.zoomRoutine)+'</div>';
+  return h;
+}
+
+/* ---------- תהליך שיפור ---------- */
+function viewProcess(c){
+  var p=c.feedbackProcess,h='<div class="hero"><h1>תהליך שיפור וגרסאות</h1><p>'+esc(p.intro)+'</p></div>';
+  h+='<div class="card"><h2>שלבי התהליך</h2>'+p.steps.map(function(s){return '<div class="callout info"><strong>'+esc(s.title)+'</strong>'+esc(s.text)+'</div>';}).join('')+'</div>';
+  h+='<div class="card"><h2>ניהול גרסאות</h2>'+ul(p.versioning)+'<p>הגרסה הנוכחית: <strong>'+esc(c.version)+'</strong></p></div>';
+  h+='<div class="card"><h2>יומן שינויים</h2><div class="table-wrap"><table><thead><tr><th>גרסה</th><th>תאריך</th><th>מה שונה</th></tr></thead><tbody>'
+   +c.changelog.map(function(x){return '<tr><td>'+esc(x.version)+'</td><td>'+esc(x.date)+'</td><td>'+esc(x.notes)+'</td></tr>';}).join('')+'</tbody></table></div></div>';
+  var n=loadFb().filter(function(x){return x.courseId===c.id;}).length;
+  h+='<div class="card"><h2>ייצוא כל המשובים של הקורס</h2><p>במחשב הזה נשמרו '+n+' משובים לקורס.</p><div class="toolbar"><button class="btn" data-act="export-json">ייצוא JSON</button><button class="btn ghost" data-act="export-csv">ייצוא CSV</button></div></div>';
+  return h;
+}
+
+/* ---------- דף קורסים ---------- */
+function viewHome(){
+  var h='<div class="hero"><h1>פורטל המדריכים</h1><p>בחרו את הקורס שאליו שובצתם כדי לצפות בסילבוס, במערכי השיעור, במדריך המורה ובטפסי המשוב.</p></div>';
+  COURSES.forEach(function(c){
+    h+='<a class="card course-card" href="#/c/'+esc(c.id)+'"><h2 style="margin-top:0">'+esc(c.title)+'</h2><p>'+esc(c.subtitle)+'</p><div class="chips">'+chip(c.format)+chip(c.lessons.length+' מפגשים')+chip('גרסה '+c.version)+'</div></a>';
+  });
+  return h;
+}
+
+/* ---------- הדפסה וייצוא של שיעור ---------- */
+function fullLessonHtml(c,l){
+  return heroLesson(c,l)+'<h2 style="margin-top:20px">חלק א: מערך שיעור</h2>'+secPlan(c,l)+'<h2>חלק ב: מדריך למורה</h2>'+secGuide(c,l,true)+'<h2>חלק ג: תרגילים ופתרונות</h2>'+secEx(c,l,true);
+}
+function printHtml(html){
+  var r=document.getElementById('print-root');r.innerHTML=html;
+  window.print();setTimeout(function(){r.innerHTML='';},500);
+}
+function exportLesson(c,l){
+  var css=document.querySelector('style').textContent;
+  var doc='<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>'+esc(c.title)+' - מפגש '+l.n+'</title><style>'+css+'</style></head><body class="export"><main><div class="wrap">'+fullLessonHtml(c,l)+'</div></main></body></html>';
+  download(c.id+'-lesson-'+l.n+'-v'+c.version+'.html',doc,'text/html');
+}
+
+/* ---------- ניווט ---------- */
+function setSidebar(c,active){
+  var sb=document.getElementById('sidebar');
+  if(!c){sb.innerHTML='<h4>קורסים</h4>'+COURSES.map(function(x){return '<a href="#/c/'+esc(x.id)+'">'+esc(x.title)+'</a>';}).join('');return;}
+  var b='<h4>'+esc(c.title)+'</h4><a href="#/c/'+esc(c.id)+'" class="'+(active==='syl'?'active':'')+'">סילבוס הקורס</a><h4>מפגשים</h4>';
+  c.lessons.forEach(function(l){b+='<a href="#/c/'+esc(c.id)+'/l/'+l.n+'/plan" class="'+(active==='l'+l.n?'active':'')+'"><span class="num">'+l.n+'.</span><span class="lbl">'+esc(l.title)+'</span></a>';});
+  b+='<h4>כללי</h4><a href="#/c/'+esc(c.id)+'/process" class="'+(active==='proc'?'active':'')+'">תהליך שיפור וגרסאות</a>';
+  sb.innerHTML=b;
+}
+function reveal(){
+  var els=document.querySelectorAll('#view .card, #view .learn-card');
+  if(!('IntersectionObserver' in window)){return;}
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+  els.forEach(function(el,i){el.classList.add('reveal');el.style.transitionDelay=(el.classList.contains('learn-card')?(i%3)*80:0)+'ms';io.observe(el);});
+  /* גיבוי: אם הדפדפן לא מדווח על גלילה, מציגים את כל התוכן */
+  setTimeout(function(){if(!document.querySelector('#view .reveal.in')){els.forEach(function(el){el.classList.add('in');});}},1200);
+}
+function render(){
+  var parts=(location.hash||'#/').replace(/^#\/?/,'').split('/').filter(Boolean);
+  var view=document.getElementById('view'),sel=document.getElementById('courseSel');
+  document.body.classList.remove('menu-open');
+  var c=parts[0]==='c'?getCourse(parts[1]):null;
+  if(!c){if(COURSES.length){location.replace('#/c/'+COURSES[0].id);return;}setSidebar(null);view.innerHTML=viewHome();document.title='פורטל המדריכים';return;}
+  sel.value=c.id;
+  if(parts[2]==='l'){
+    var l=getLesson(c,parts[3]);
+    if(!l){location.hash='#/c/'+c.id;return;}
+    var tab=parts[4]||'plan';
+    setSidebar(c,'l'+l.n);
+    var base='#/c/'+c.id+'/l/'+l.n+'/';
+    var body=tab==='guide'?secGuide(c,l,false):tab==='ex'?secEx(c,l,false):tab==='fb'?secFeedback(c,l):secPlan(c,l);
+    view.innerHTML=heroLesson(c,l)
+      +'<div class="toolbar"><button class="btn" data-act="print">הדפסת המפגש</button><button class="btn ghost" data-act="export">ייצוא כקובץ HTML</button></div>'
+      +'<div class="tabs" role="tablist">'
+      +[['plan','מערך שיעור'],['guide','מדריך למורה'],['ex','תרגילים ופתרונות'],['fb','משוב']].map(function(t){return '<a class="tab '+(tab===t[0]?'active':'')+'" role="tab" href="'+base+t[0]+'">'+t[1]+'</a>';}).join('')
+      +'</div>'+body
+      +'<div class="toolbar">'+(l.n>1?'<a class="btn ghost" href="#/c/'+c.id+'/l/'+(l.n-1)+'/plan">המפגש הקודם</a>':'')+(l.n<c.lessons.length?'<a class="btn ghost" href="#/c/'+c.id+'/l/'+(l.n+1)+'/plan">המפגש הבא</a>':'')+'</div>';
+    document.title=c.title+' | מפגש '+l.n;
+    if(tab==='fb')renderFbList(c,l);
+  } else if(parts[2]==='process'){
+    setSidebar(c,'proc');view.innerHTML=viewProcess(c);document.title='תהליך שיפור | '+c.title;
+  } else {
+    setSidebar(c,'syl');view.innerHTML=viewSyllabus(c);document.title='סילבוס | '+c.title;
+  }
+  window.scrollTo(0,0);
+  reveal();
+}
+
+/* ---------- אירועים ---------- */
+document.addEventListener('click',function(ev){
+  var t=ev.target;
+  if(t.closest('#menuBtn')){document.body.classList.toggle('menu-open');return;}
+  if(t.closest('#sidebar a')){document.body.classList.remove('menu-open');}
+  var cp=t.closest('[data-copy]');
+  if(cp){var pre=cp.parentNode.querySelector('pre');var txt=pre.textContent;
+    var done=function(){cp.textContent='הועתק';setTimeout(function(){cp.textContent='העתק';},1200);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){});}
+    else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
+    return;}
+  var a=t.closest('[data-act]');if(!a)return;
+  var parts=(location.hash||'').replace(/^#\/?/,'').split('/').filter(Boolean);
+  var c=getCourse(parts[1]);if(!c)return;
+  var l=parts[2]==='l'?getLesson(c,parts[3]):null;
+  var act=a.getAttribute('data-act');
+  if(act==='print'&&l)printHtml(fullLessonHtml(c,l));
+  else if(act==='export'&&l)exportLesson(c,l);
+  else if(act==='print-syllabus')printHtml('<div class="hero"><h1>'+esc(c.title)+'</h1><p>'+esc(c.subtitle)+'</p></div>'+syllabusBody(c));
+  else if(act==='export-json'){download('feedback-'+c.id+'.json',JSON.stringify(loadFb().filter(function(x){return x.courseId===c.id;}),null,2),'application/json');}
+  else if(act==='export-csv'){
+    var rows=loadFb().filter(function(x){return x.courseId===c.id;});
+    var keys={};rows.forEach(function(r){Object.keys(r.data).forEach(function(k){keys[k]=1;});});
+    var cols=['type','lesson','version','ts'].concat(Object.keys(keys));
+    var q=function(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"';};
+    var csv='﻿'+cols.join(',')+'\n'+rows.map(function(r){return cols.map(function(k){return q(['type','lesson','version','ts'].indexOf(k)>=0?r[k]:r.data[k]);}).join(',');}).join('\n');
+    download('feedback-'+c.id+'.csv',csv,'text/csv');
+  }
+});
+document.addEventListener('submit',function(ev){
+  var f=ev.target.closest('form.fb');if(!f)return;ev.preventDefault();
+  var parts=(location.hash||'').replace(/^#\/?/,'').split('/').filter(Boolean);
+  var c=getCourse(parts[1]);if(!c)return;
+  var data={};new FormData(f).forEach(function(v,k){if(v!=='')data[k]=v;});
+  var l=getLesson(c,f.getAttribute('data-lesson'));
+  if(f.getAttribute('data-type')==='instructor'){l.timing.forEach(function(t,i){if(data['actual_'+i]!==undefined){data['planned_'+i]=t.min;}});}
+  var list=loadFb();
+  list.push({courseId:c.id,lesson:l.n,type:f.getAttribute('data-type'),version:c.version,ts:Date.now(),data:data});
+  var ok=saveFb(list);var n=f.querySelector('.notice');
+  n.style.display='block';n.textContent=ok?'המשוב נשמר בדפדפן הזה. לייצוא: משוב שנשמרו למפגש, או דף תהליך השיפור.':'לא ניתן לשמור בדפדפן. השתמשו בכפתור ״הדפסה״ כדי לשמור את הטופס ב-PDF.';
+  if(ok){f.reset();renderFbList(c,l);}
+});
+document.getElementById('courseSel').addEventListener('change',function(e){location.hash=e.target.value?'#/c/'+e.target.value:'#/';});
+var sel=document.getElementById('courseSel');
+sel.innerHTML=COURSES.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.title)+'</option>';}).join('');
+window.addEventListener('hashchange',render);
+render();
+})();
+</script>
+</body>
+</html>
